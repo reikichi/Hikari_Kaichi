@@ -1,0 +1,19 @@
+//三の位を決定する関数
+int NUMBER_O(int red, int green, int blue) {
+
+  if (red >= threshold && green >= threshold && blue >= threshold) {
+    O = -1;   // 赤、緑、青が全てしきい値を超えた場合
+  }
+  else {
+    if (red >= green && red >= blue) {       // 赤の光量が一番大きい場合
+      O = 2;
+    }
+    else if (green >= red && green >= blue) {  // 緑の光量が一番大きい場合
+      O = 1;
+    }
+    else {    // 青の光量が一番大きい場合
+      O = 0;
+    }
+  }
+  return O;          // 関数の戻り値としてEを返す
+}
