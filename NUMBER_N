@@ -5,8 +5,8 @@ int NUMBER_N(int red, int green, int blue) {
     N = -1;   // 赤、緑、青が全てしきい値を超えた場合
   }
   else {
-    if (red >= green && red >= blue) {       // 赤の光量が一番大きい場合
-      N = 100;
+    if (red >= green && red >= blue) {       //赤の光量が一番大きい場合
+      N = 100;                               //九の位が2になることはないのでこれを前に送った文字のコピーに充てる
     }
     else if (green >= red && green >= blue) {  // 緑の光量が一番大きい場合
       N = 1;
