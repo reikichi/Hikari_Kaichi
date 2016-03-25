@@ -1,0 +1,19 @@
+//九の位を決定する関数
+int NUMBER_N(int red, int green, int blue) {
+
+  if (red >= threshold && green >= threshold && blue >= threshold) {
+    N = -1;   // 赤、緑、青が全てしきい値を超えた場合
+  }
+  else {
+    if (red >= green && red >= blue) {       // 赤の光量が一番大きい場合
+      N = 100;
+    }
+    else if (green >= red && green >= blue) {  // 緑の光量が一番大きい場合
+      N = 1;
+    }
+    else {    // 青の光量が一番大きい場合
+      N = 0;
+    }
+  }
+  return N;          // 関数の戻り値としてEを返す
+}
