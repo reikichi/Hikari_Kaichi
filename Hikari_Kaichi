@@ -1,0 +1,100 @@
+
+
+
+//*************************************************************　
+//　　　開智の本番用プログラムです
+//      残ってたいらないコメントは削除しましたが
+//*************************************************************
+//以下の定数（整数）の値は、必要に応じて変更してください。
+const int integration = 20; //カラーセンサーの光量積算時間をmsの単位で設定する定数
+const int threshold = 20;   //光信号が送られてきたかを判定するしきい値を設定する定数
+const int dataPin  = 2;      //カラーセンサーの①データ入力端子を接続するデジタルピン番号
+const int rangePin = 3;      //カラーセンサーの④レンジ出力端子を接続するデジタルピン番号
+const int clockPin = 4;      //カラーセンサーの⑤クロック出力端子を接続するデジタルピン番号
+const int gatePin  = 5;      //カラーセンサーの⑥ゲート出力端子を接続するデジタルピン番号
+
+//各種変数の型の宣言
+int red, green, blue, sum, X, N, T, O;     // 各色の光量の値や色相などを代入する変数
+int POOL = 0;
+
+char s[100];     // Arduino IDEのシリアルモニタに出力する文字列を保持する変数
+
+void setup() {  //電源投入後もしくはリセット後に一度だけ実行される関数
+  Serial.begin(9600);  //シリアル通信速度の設定
+  setSensor();          //カラーセンサーの初期設定
+
+
+}
+
+void loop() {  //setup関数が実行された後に、繰り返し実行される関数
+RESET:
+
+  do {
+    readRGB();   //各色の光量（RGB値）の測定
+  }
+  while (sum  < threshold); //RGB値の和がしきい値を超えるまで測定を繰り返す
+  readRGB();     //光量不足の可能性があるため、RGB値の測定をもう一度行う
+  NUMBER_N(red, green, blue) ;
+  do {
+    readRGB();   //各色の光量（RGB値）の測定
+  }
+  while (sum > threshold); //RGB値の和がしきい値以下になるまで測定を繰り返す
+  if (N == -1)
+    goto RESET;   // 赤、緑、青が全てしきい値を超えた場合はRESETされる
+  if (N == 100)
+    goto SKIP;    // 赤のみがしきい値を超えた場合はSKIP
+
+  do {
+    readRGB();   //各色の光量（RGB値）の測定
+  }
+  while (sum  < threshold); //RGB値の和がしきい値を超えるまで測定を繰り返す
+  readRGB();     //光量不足の可能性があるため、RGB値の測定をもう一度行う
+  NUMBER_T(red, green, blue) ;
+  do {
+    readRGB();   //各色の光量（RGB値）の測定
+  }
+  while (sum > threshold); //RGB値の和がしきい値以下になるまで測定を繰り返す
+  if (T == -1)
+    goto RESET;   // 赤、緑、青が全てしきい値を超えた場合はRESETされる
+
+  do {
+    readRGB();   //各色の光量（RGB値）の測定
+  }
+  while (sum  < threshold); //RGB値の和がしきい値を超えるまで測定を繰り返す
+  readRGB();     //光量不足の可能性があるため、RGB値の測定をもう一度行う
+  NUMBER_O(red, green, blue) ;
+  do {
+    readRGB();   //各色の光量（RGB値）の測定
+  }
+  while (sum > threshold); //RGB値の和がしきい値以下になるまで測定を繰り返す
+  if (O == -1)
+    goto RESET;   // 赤、緑、青が全てしきい値を超えた場合はRESETされる
+
+SKIP:
+
+
+  X = 9 * N + 3 * T + 1 * O;
+  if (X >= 100) {
+    X = POOL;   // NUMBER_Nで赤のみがしきい値を超えている場合、X>=100になる
+    // このことを利用しX>=100の場合にはXにPOOLに保管してある1つ前に送ったXの値を代入する
+  }
+
+
+  POOL = X;   // POOLにXの値を保管する
+  
+  Serial.print(X, 16);  //0～15の整数を16進数で表した文字（0～F）をシリアル送信する
+  Serial.flush();  //シリアル送信が終了するまで待機する
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
