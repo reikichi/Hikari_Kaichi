@@ -1,0 +1,10 @@
+//カラーセンサー（S9706）の初期設定をする関数
+void setSensor() {
+  pinMode(dataPin, INPUT);         //デジタル入力ピンを入力モードにする
+  pinMode(rangePin, OUTPUT);       //レンジ出力ピンを出力モードにする
+  pinMode(clockPin, OUTPUT);       //クロック出力ピンを出力モードにする
+  pinMode(gatePin, OUTPUT);        //ゲート出力ピンを出力モードにする
+  digitalWrite(rangePin, HIGH);    // カラーセンサーの9x9素子すべてを使用する
+  digitalWrite(clockPin, LOW);     // クロック出力ピンをLOWにする
+  digitalWrite(gatePin, LOW);      // ゲート出力ピンをLOWにする
+}
