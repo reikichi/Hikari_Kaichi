@@ -1,0 +1,22 @@
+//カラーセンサーから12ビットのデータを取り込み、各色の光量を計算する関数
+void readRGB() {
+  digitalWrite(gatePin, HIGH);  // ゲート端子をHIGHにして測定開始
+  delay(integration);           // 測定時間だけ待つ
+  digitalWrite(gatePin, LOW);   // ゲート端子をLOWにして測定終了
+  int value = 0;
+
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 12; j++) {
+      digitalWrite(clockPin, HIGH);          // クロック端子をHIGHにする
+      value |= digitalRead(dataPin) << j;    // デジタル出力端子の値を読み取り，valueに格納する
+      digitalWrite(clockPin, LOW);           // クロックピンをLOWにする
+    }
+    switch (i) {
+      case (0): red   = value;      // 赤の光量の値を代入する
+      case (1): green = value;      // 緑の光量の値を代入する
+      case (2): blue  = value;      // 青の光量の値を代入する
+    }
+    value = 0;
+  }
+  sum = red + green + blue;
+}
